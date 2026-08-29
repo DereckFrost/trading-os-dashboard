@@ -270,7 +270,7 @@ export async function POST(request: NextRequest) {
 
       if (stepId === 4 && !getStepAvailability(4)) {
         throw new Error(
-          "El paso de espera activa se habilita a las 9:20 AM.",
+          "El paso de espera activa se habilita a las 9:15 AM.",
         );
       }
 
@@ -364,9 +364,9 @@ export async function POST(request: NextRequest) {
 
       const currentMinutes = Number(body.currentMinutes);
 
-      if (!Number.isFinite(currentMinutes) || currentMinutes < 560) {
+      if (!Number.isFinite(currentMinutes) || currentMinutes < 555) {
         throw new Error(
-          "La espera activa comienza a las 9:20 AM.",
+          "La espera activa comienza a las 9:15 AM.",
         );
       }
 

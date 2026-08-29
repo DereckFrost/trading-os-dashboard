@@ -40,7 +40,7 @@ export type EntryValidation = {
 
 export type SopCompletedSteps = Record<string, unknown>;
 
-export const ACTIVE_WAIT_START_MINUTES = 9 * 60 + 20;
+export const ACTIVE_WAIT_START_MINUTES = 9 * 60 + 15;
 export const ENTRY_VALIDATION_START_MINUTES = 9 * 60 + 45;
 
 // Backwards-compatible alias: the SOP execution window begins with active wait.
@@ -60,9 +60,9 @@ export const SOP_STEPS: SopStep[] = [
   {
     id: 4,
     label: "Esperar activamente",
-    detail: "A partir de las 9:20 AM",
+    detail: "A partir de las 9:15 AM",
     phase: "Ejecución",
-    availableAfter: "09:20",
+    availableAfter: "09:15",
   },
   {
     id: 5,

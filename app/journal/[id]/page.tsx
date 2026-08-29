@@ -116,6 +116,10 @@ export default function TradeDetailPage({
   const [tradingDay, setTradingDay] = useState<TradingDay | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<{
+    url: string;
+    alt: string;
+  } | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -201,6 +205,25 @@ export default function TradeDetailPage({
       cancelled = true;
     };
   }, [tradeId]);
+
+  useEffect(() => {
+    if (!lightboxImage) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setLightboxImage(null);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [lightboxImage]);
 
   async function handleDelete() {
     if (!trade) return;
@@ -441,11 +464,23 @@ export default function TradeDetailPage({
             <div className="screenshot">
               <div className="screenshot-label">ANTES</div>
               {trade.before_screenshot_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={screenshotSrc(trade.before_screenshot_url)}
-                  alt="Screenshot antes de la entrada"
-                />
+                <button
+                  type="button"
+                  className="screenshot-trigger"
+                  onClick={() =>
+                    setLightboxImage({
+                      url: screenshotSrc(trade.before_screenshot_url),
+                      alt: "Screenshot antes de la entrada",
+                    })
+                  }
+                  aria-label="Expandir screenshot antes de la entrada"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={screenshotSrc(trade.before_screenshot_url)}
+                    alt="Screenshot antes de la entrada"
+                  />
+                </button>
               ) : (
                 <div className="no-image">
                   Sin screenshot antes de la entrada.
@@ -456,11 +491,23 @@ export default function TradeDetailPage({
             <div className="screenshot">
               <div className="screenshot-label">DESPUÉS</div>
               {trade.after_screenshot_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={screenshotSrc(trade.after_screenshot_url)}
-                  alt="Screenshot después del cierre"
-                />
+                <button
+                  type="button"
+                  className="screenshot-trigger"
+                  onClick={() =>
+                    setLightboxImage({
+                      url: screenshotSrc(trade.after_screenshot_url),
+                      alt: "Screenshot después del cierre",
+                    })
+                  }
+                  aria-label="Expandir screenshot después del cierre"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={screenshotSrc(trade.after_screenshot_url)}
+                    alt="Screenshot después del cierre"
+                  />
+                </button>
               ) : (
                 <div className="no-image">
                   Sin screenshot después del cierre.
@@ -469,6 +516,35 @@ export default function TradeDetailPage({
             </div>
           </div>
         </section>
+
+        {lightboxImage && (
+          <div
+            className="lightbox"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Screenshot ampliado"
+            onClick={() => setLightboxImage(null)}
+          >
+            <button
+              type="button"
+              className="lightbox-close"
+              onClick={() => setLightboxImage(null)}
+              aria-label="Cerrar screenshot ampliado"
+            >
+              ×
+            </button>
+            <div
+              className="lightbox-content"
+              onClick={(event) => event.stopPropagation()}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={lightboxImage.url}
+                alt={lightboxImage.alt}
+              />
+            </div>
+          </div>
+        )}
 
         <section className="card">
           <p className="card-label">NOTAS</p>
@@ -732,12 +808,84 @@ const styles = `
     letter-spacing: 1.5px;
   }
 
+  .screenshot-trigger {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: zoom-in;
+  }
+
+  .screenshot-trigger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+
   .screenshot img {
     display: block;
     width: 100%;
     max-height: 520px;
     object-fit: contain;
     background: var(--background);
+    transition: opacity 160ms ease;
+  }
+
+  .screenshot-trigger:hover img {
+    opacity: 0.9;
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    background: rgba(0, 0, 0, 0.86);
+    backdrop-filter: blur(4px);
+    cursor: zoom-out;
+  }
+
+  .lightbox-content {
+    max-width: min(1500px, 94vw);
+    max-height: 92vh;
+    cursor: default;
+  }
+
+  .lightbox-content img {
+    display: block;
+    max-width: 100%;
+    max-height: 92vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: var(--background);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+  }
+
+  .lightbox-close {
+    position: fixed;
+    top: 18px;
+    right: 22px;
+    z-index: 1;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    color: var(--text-primary);
+    background: var(--surface-2);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .lightbox-close:hover {
+    border-color: var(--accent-border);
+    color: var(--accent);
   }
 
   .no-image {

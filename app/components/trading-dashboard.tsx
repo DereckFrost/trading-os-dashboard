@@ -810,7 +810,12 @@ function CalendarDay({
   const hasTrades =
     trades.length > 0;
 
+  const weekday = current.getDay();
+  const isWeekend =
+    weekday === 0 || weekday === 6;
+
   const hasEvaluation =
+    !isWeekend &&
     Boolean(
       tradingDay ||
         sopSession,
@@ -829,6 +834,7 @@ function CalendarDay({
     );
 
   const processAdherent =
+    !isWeekend &&
     Boolean(
       tradingDay &&
         tradingDay.waited_for_setup &&

@@ -633,7 +633,7 @@ export function DailyWorkflowPanel() {
 
     if (!isActiveWaitReady) {
       setError(
-        "La espera activa comienza a las 9:20 AM.",
+        "La espera activa comienza a las 9:15 AM.",
       );
       return;
     }
@@ -887,7 +887,7 @@ export function DailyWorkflowPanel() {
         return;
       }
       if (!isActiveWaitReady) {
-        setError("La espera activa comienza a las 9:20 AM.");
+        setError("La espera activa comienza a las 9:15 AM.");
         return;
       }
       setShowWaitGate(true);

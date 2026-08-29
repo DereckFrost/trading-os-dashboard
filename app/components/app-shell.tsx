@@ -121,12 +121,12 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="group flex items-center gap-3"
             aria-label="Trading OS"
           >
-            <span className="grid size-9 place-items-center rounded-[10px] border border-[var(--accent-border)] bg-[var(--accent-soft)] text-[var(--accent)] shadow-[0_0_24px_rgb(89_230_165_/_0.08)]">
+            <span className="grid size-9 shrink-0 place-items-center rounded-[10px] border border-[var(--accent-border)] bg-[var(--accent-soft)] text-[var(--accent)] shadow-[0_0_24px_rgb(89_230_165_/_0.08)]">
               <span className="text-sm font-black tracking-[-0.08em]">T</span>
             </span>
 
             {!collapsed && (
-              <span>
+              <span className="min-w-0">
                 <span className="block text-[13px] font-bold tracking-[-0.02em] text-[var(--text-primary)]">
                   Trading OS
                 </span>

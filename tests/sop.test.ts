@@ -51,9 +51,9 @@ describe("SOP", () => {
     });
   });
 
-  it("allows active waiting from 09:20", () => {
-    const before = new Date(2026, 7, 13, 9, 19);
-    const atStart = new Date(2026, 7, 13, 9, 20);
+  it("allows active waiting from 09:15", () => {
+    const before = new Date(2026, 7, 13, 9, 14);
+    const atStart = new Date(2026, 7, 13, 9, 15);
 
     expect(isAfterSopStart(before)).toBe(false);
     expect(isAfterSopStart(atStart)).toBe(true);
